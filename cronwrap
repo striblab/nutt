@@ -1,0 +1,69 @@
+#!/bin/bash
+
+###
+# Usage
+#
+# ./cronwrap.sh "Title" "task-id" "command"
+###
+
+# Check arguments
+if [ $# -lt 3 ]; then
+  echo "Not enough arguments provided; should be: run \"<TITLE>\" \"<TASK-ID>\" \"<COMMAND>\""
+  exit 1
+fi
+
+# Functions
+command_exists () {
+  type "$1" &> /dev/null;
+}
+
+# Variables
+TITLE=$1
+ID=$2
+COMMAND=$3
+NUTT=$HOME/.nutt
+LOGS=/nutt/logs
+DATE=`date +%Y-%m-%dT%H:%M:%S`
+
+# Change log location for testing
+if [ -n "$TEST" ]; then
+  LOGS=./tests/logs
+  HOME=./
+fi
+
+# Setup
+set -e
+if [ -f $NUTT ]; then
+  source $NUTT
+fi
+
+# Assume home directory
+cd $HOME
+
+# Make sure log directory is there
+mkdir -p $LOGS
+LOGS_OUT=$LOGS/$ID.log
+LOGS_ERR=$LOGS/$ID.err.log
+
+# Start entry in log
+echo "[$DATE] [$ID] Start: '$TITLE'" >> $LOGS_OUT
+echo "[$DATE] [$ID] Command: '$COMMAND'" >> $LOGS_OUT
+echo "[$DATE] [$ID] Start: '$TITLE'" >> $LOGS_ERR
+echo "[$DATE] [$ID] Command: '$COMMAND'" >> $LOGS_ERR
+
+# Check fi dogwrap is there, else just run command
+if command_exists dogwrap; then
+  # Check for datadog API
+  if [ -n "$DATADOG_KEY" ]; then
+    dogwrap -n "$TITLE" --tags="news-worker, nutt, $ID" -m "errors" -k "$DATADOG_KEY" "$COMMAND" 2>> $LOGS_ERR 1>> $LOGS_OUT
+  else
+    echo "[$DATE] [$ID] dogwrap found, but DATADOG_KEY not found" >> $LOGS_ERR
+    $COMMAND 2>> $LOGS_ERR 1>> $LOGS_OUT
+  fi
+else
+  $COMMAND 2>> $LOGS_ERR 1>> $LOGS_OUT
+fi
+
+# End entry in log
+echo "[$DATE] [$ID] End: '$TITLE'" >> $LOGS_OUT
+echo "[$DATE] [$ID] End: '$TITLE'" >> $LOGS_ERR
