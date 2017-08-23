@@ -27,3 +27,7 @@ sudo mkdir /nutt
 sudo chown $USER:users /nutt
 mkdir -p /nutt/projects
 mkdir -p /nutt/logs
+
+
+# This project
+git clone https://github.com/striblab/nutt.git /nutt/projects/nutt

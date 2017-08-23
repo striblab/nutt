@@ -20,23 +20,25 @@ fi
 
 ## Projects
 
-Install projects in your `/nutt/projects` folder.  For instance:
+Install projects in the `/nutt/projects` folder.  For instance:
 
 ```
-cd ~/projects && git clone https://github.com/striblab/your-project.git
+cd /nutt/projects && git clone https://github.com/striblab/your-project.git
 ```
 
 ## Cron tasks
 
-Make sure this project is in projects.
+Then add something to cron (`crontab -e`) like the following:
 
 ```
-*/10 * * * * /nutt/projects/nutt/cronwrap "Title for task" "task-id" "cd /nutt/projects/project && ./command -to=run"
+*/10 * * * * /nutt/projects/nutt/cronwrap "Title for task" "task-id" "cd /nutt/projects/project && ./command -to=\"run\""
 ```
 
 To integrate cron tasks with [Datadog](https://www.datadoghq.com/), there is a `dogwrap` command that is available through the [datadog Python library](https://github.com/DataDog/datadogpy).
 
 The `cronwrap` command will look for `dogwrap` and the `DATADOG_KEY` environment variable, and if it is not there, then it will just the command and log to the relevant `/nutt/logs`.
+
+This assumes that this project is in the projects folder, i.e. `git clone https://github.com/striblab/nutt.git /nutt/projects/nutt`
 
 ## Logs
 
