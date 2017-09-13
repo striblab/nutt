@@ -5,17 +5,10 @@
 # and may not worked completely as a script.
 ###
 
-# Setup time to use Amazon NTP servers
-sudo apt-get install ntp ntpstat
-sudo cp /etc/ntp.conf /etc/ntp.conf.orig
-sudo bash -c 'echo "driftfile /var/lib/ntp/ntp.drift" > /etc/ntp.conf'
-sudo bash -c 'echo "server 0.amazon.pool.ntp.org" >> /etc/ntp.conf'
-sudo bash -c 'echo "server 1.amazon.pool.ntp.org" >> /etc/ntp.conf'
-sudo bash -c 'echo "server 2.amazon.pool.ntp.org" >> /etc/ntp.conf'
-sudo bash -c 'echo "server 3.amazon.pool.ntp.org" >> /etc/ntp.conf'
-sudo bash -c 'echo "disable monitor" >> /etc/ntp.conf'
-sudo bash -c 'echo "restrict default ignore" >> /etc/ntp.conf'
-sudo service ntp restart
+# Initially time was off, but should be ok
+# https://github.com/MinneapolisStarTribune/ansible-infrastructure/issues/1878
+#sudo apt-get install ntp ntpstat
+#sudo service ntp restart
 
 
 # Packages

@@ -55,15 +55,15 @@ echo "[$DATE] [$ID] Command: '$COMMAND'" >> $LOGS_ERR
 if command_exists dogwrap; then
   # Check for datadog API
   if [ -n "$DATADOG_KEY" ]; then
-    dogwrap -n "$TITLE" --tags="news-worker, nutt, $ID" -m "errors" -k "$DATADOG_KEY" "$COMMAND" 2>> $LOGS_ERR 1>> $LOGS_OUT
+    dogwrap -n "$TITLE" --tags="news-worker, nutt, $ID" -m "errors" -k "$DATADOG_KEY" "$COMMAND" 2>> $LOGS_ERR 1>> $LOGS_OUT || true
   else
     echo "[$DATE] [$ID] dogwrap found, but DATADOG_KEY not found" >> $LOGS_ERR
-    $COMMAND 2>> $LOGS_ERR 1>> $LOGS_OUT
+    $COMMAND 2>> $LOGS_ERR 1>> $LOGS_OUT || true
   fi
 else
-  $COMMAND 2>> $LOGS_ERR 1>> $LOGS_OUT
+  $COMMAND 2>> $LOGS_ERR 1>> $LOGS_OUT || true
 fi
 
 # End entry in log
-echo "[$DATE] [$ID] End: '$TITLE'" >> $LOGS_OUT
-echo "[$DATE] [$ID] End: '$TITLE'" >> $LOGS_ERR
+echo "[`date +%Y-%m-%dT%H:%M:%S`] [$ID] End: '$TITLE'" >> $LOGS_OUT
+echo "[`date +%Y-%m-%dT%H:%M:%S`] [$ID] End: '$TITLE'" >> $LOGS_ERR

@@ -28,7 +28,15 @@ cd /nutt/projects && git clone https://github.com/striblab/your-project.git
 
 ## Cron tasks
 
-Then add something to cron (`crontab -e`) like the following:
+Under your crontab, it's suggested to add some of the following environment variables to your `crontab` (edit with `crontab -e`).  You can get your path by running `echo $PATH`.
+
+```bash
+HOME=/home/alan
+SHELL=/bin/bash
+PATH= ...
+```
+
+Then add something like the following:
 
 ```
 */10 * * * * /nutt/projects/nutt/cronwrap "Title for task" "task-id" "cd /nutt/projects/project && ./command -to=\"run\""
