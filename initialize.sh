@@ -38,7 +38,12 @@ mkdir -p /nutt/data
 
 # This project
 git clone https://github.com/striblab/nutt.git /nutt/projects/nutt
+cd /nutt/projects/nutt
 
 # Configure AWS cli
 # http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html
 aws configure
+
+# Setup logrotate
+sudo cp /etc/logrotate.conf /etc/logrotate.conf.orig
+sudo cat ./conf/logrotate.append.conf >> /etc/logrotate.conf
